@@ -4,11 +4,12 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <TapControl :titles="['流行','新款','精选']" @tabClick="tabClick" ref="tabControl1" class="tab-control" v-show="isTabFixed"></TapControl>
     <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true" @scroll="contentScroll" @pullingUp="loadMore">
       <HomeSwiper :banners="banners"></HomeSwiper>
       <RecommendView :recommends="recommends"></RecommendView>
       <FeatureView></FeatureView>
-      <TapControl class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"></TapControl>
+      <TapControl :titles="['流行','新款','精选']" @tabClick="tabClick" ref="tabControl2"></TapControl>
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
     <!-- .native 监听组件根元素的原生事件 -->
@@ -47,7 +48,10 @@ export default {
         sell: { page: 0, list: [] }
       },
       currentType: 'pop',
-      isShowBackTop: false
+      isShowBackTop: false,
+      tabOffsetTop: 0,
+      isTabFixed: false,
+      saveY: 0
     }
   },
   computed: {
@@ -65,12 +69,25 @@ export default {
     Scroll,
     BackTop
   },
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY, 1)
+    // 刷新一次
+    this.$refs.scroll.scroll.refresh()
+  },
+  deactivated() {
+    this.saveY = this.$refs.scroll.scroll.y
+  },
   created() {
     // 调用请求数据函数
     this.getHomeMultidata()
     this.getHomeGoods('pop')
     this.getHomeGoods('new')
     this.getHomeGoods('sell')
+  },
+  updated() {
+    // 获取tabControl的offsetTop
+    // 所有的组件都有一个属性 $el: 用于获取组件中的元素
+    this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
   },
   methods: {
     // 请求页面数据
@@ -101,6 +118,8 @@ export default {
           this.currentType = 'sell'
           break
       }
+      this.$refs.tabControl1.currentIndex = index
+      this.$refs.tabControl2.currentIndex = index
     },
     // 回到顶部
     backClick() {
@@ -108,7 +127,10 @@ export default {
     },
     // 回到顶部按钮的相关函数
     contentScroll(position) {
+      // 判断BackTop是否显示
       this.isShowBackTop = -position.y > 1000
+      // 决定tabControl是否吸顶
+      this.isTabFixed = -position.y > this.tabOffsetTop
     },
     // 上拉加载更多
     loadMore() {
@@ -116,7 +138,7 @@ export default {
       // 结束上一次下拉
       setTimeout(() => {
         this.$refs.scroll.finishPullUp()
-      }, 1000)
+      }, 500)
       // 刷新scroll的高度计算
       this.$refs.scroll.scroll.refresh()
     }
@@ -127,7 +149,7 @@ export default {
 <style scoped>
 #home {
   position: relative;
-  padding-top: 44px;
+  /* padding-top: 44px; */
   text-align: center;
   /* vh 视口高度 */
   height: 100vh;
@@ -135,16 +157,12 @@ export default {
 .home-nav {
   background-color: var(--color-tint);
   color: #ffff;
-  position: fixed;
+  /* 如果使用betterscroll插件，则不需要设置，此处仅适用于原生滚动 */
+  /* position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  z-index: 9;
-}
-.tab-control {
-  position: sticky;
-  top: 44px;
-  z-index: 9;
+  z-index: 9; */
 }
 .content {
   position: absolute;
@@ -169,5 +187,9 @@ export default {
   to {
     opacity: 1;
   }
+}
+.tab-control {
+  position: relative;
+  z-index: 9;
 }
 </style>

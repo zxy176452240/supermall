@@ -31,6 +31,8 @@ export default {
     this.scroll = new BScroll(this.$refs.wrapper, {
       // 开启对 content 以及 content 子元素 DOM 改变的探测
       observeDOM: true,
+      // 开启对 图片加载的探测
+      observeImage: true,
       // 监听滚动条事件
       probeType: this.probeType,
       // 监听点击事件
@@ -53,7 +55,7 @@ export default {
   methods: {
     // 回到顶部
     scrollTo(x, y, time = 450) {
-      this.scroll.scrollTo(x, y, time)
+      this.scroll && this.scroll.scrollTo(x, y, time)
     },
     // 上拉加载
     finishPullUp() {
