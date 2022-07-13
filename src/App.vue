@@ -1,9 +1,10 @@
 <template>
   <div id="app" class="wrapper">
-    <keep-alive>
+    <keep-alive exclude="DetailMsg">
       <router-view></router-view>
     </keep-alive>
-    <main-tab-bar />
+    <!-- 判断如果当前路由路径不含有 detail（详情页）字符，则显示标签栏 -->
+    <main-tab-bar v-if="!/^\/detail/.test($route.path)"></main-tab-bar>
   </div>
 </template>
 

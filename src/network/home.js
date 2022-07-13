@@ -1,4 +1,4 @@
-// 首页的网络请求
+// 首页的数据请求
 import { request } from './request';
 
 export function getHomeMultidata () {

@@ -61,6 +61,10 @@ export default {
     finishPullUp() {
       // 结束上一次的上拉事件，作用：结束之后才能再次触发上拉事件 默认只触发一次
       this.scroll.finishPullUp()
+    },
+    // 刷新滚动
+    refresh() {
+      this.scroll && this.scroll.refresh && this.scroll.refresh()
     }
   }
 }
