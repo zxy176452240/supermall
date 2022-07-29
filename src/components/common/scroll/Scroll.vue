@@ -1,3 +1,4 @@
+<!-- 封装better-scroll -->
 <template>
   <div class="wrapper" ref="wrapper">
     <div class="content">
@@ -29,16 +30,19 @@ export default {
   mounted() {
     // 1.创建 BScroll对象
     this.scroll = new BScroll(this.$refs.wrapper, {
-      // 开启对 content 以及 content 子元素 DOM 改变的探测
-      observeDOM: true,
       // 开启对 图片加载的探测
       observeImage: true,
+      // 开启对 content 以及 content 子元素 DOM 改变的探测
+      observeDOM: true,
       // 监听滚动条事件
       probeType: this.probeType,
       // 监听点击事件
       click: true,
       // 监听上拉加载事件
-      pullUpLoad: this.pullUpLoad
+      pullUpLoad: this.pullUpLoad,
+      disableMouse: false, //启用鼠标拖动
+      disableTouch: false, //启用手指触摸
+      mouseWheel: true //开启鼠标滚轮
     })
 
     // 2.监听滚动的位置

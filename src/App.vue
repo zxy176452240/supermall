@@ -10,14 +10,33 @@
 
 <script>
 import MainTabBar from 'components/content/mainTabbar/MainTabBar'
+
 export default {
   name: 'App',
   components: {
     MainTabBar
+  },
+  mounted() {
+    window.onload = function () {
+      document.addEventListener('touchstart', function (event) {
+        if (event.touches.length > 1) {
+          event.preventDefault()
+        }
+      })
+      document.addEventListener('gesturestart', function (event) {
+        event.preventDefault()
+      })
+    }
   }
 }
 </script>
 
 <style>
 @import url('./assets/css/base.css');
+
+.wrapper {
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
 </style>

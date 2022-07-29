@@ -1,7 +1,7 @@
 <!-- 商品展示子组件 -->
 <template>
   <div class="goods-item" @click="itemClick">
-    <img :src="goodsItem.show.img" alt="">
+    <img v-lazy="showImage" alt="" :key="showImage">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'GoodsListItemMsg',
+  name: 'GoodsListItem',
   props: {
     goodsItem: {
       type: Object,
@@ -21,6 +21,16 @@ export default {
       }
     }
   },
+  computed: {
+    showImage() {
+      return (
+        this.goodsItem.image || this.goodsItem.img || this.goodsItem.show.img
+      )
+    }
+  },
+  // mounted() {
+  //   console.log(this.goodsItem)
+  // },
   methods: {
     itemClick() {
       this.$router.push('/detail/' + this.goodsItem.iid)

@@ -23,9 +23,11 @@
 // 导入公共组件
 import NavBar from 'components/common/navbar/NavBar'
 import Scroll from 'components/common/scroll/Scroll'
-import BackTop from 'components/content/backTop/BackTop'
 import GoodsList from 'components/content/goods/GoodsList'
-import TapControl from 'components/content/tabControl/TapControl'
+import TapControl from 'components/content/tabControl/TabControl'
+import { BACK_TOP } from 'common/consts'
+import { backTopMixin } from 'common/mixin'
+
 // 导入方法
 import { getHomeGoods, getHomeMultidata } from 'network/home.js'
 // 导入子组件
@@ -59,6 +61,7 @@ export default {
       return this.goods[this.currentType].list
     }
   },
+  mixins: [backTopMixin],
   components: {
     NavBar,
     HomeSwiper,
@@ -66,8 +69,7 @@ export default {
     FeatureView,
     TapControl,
     GoodsList,
-    Scroll,
-    BackTop
+    Scroll
   },
   activated() {
     this.$refs.scroll.scrollTo(0, this.saveY, 1)
@@ -75,6 +77,7 @@ export default {
     this.$refs.scroll.scroll.refresh()
   },
   deactivated() {
+    // 保存滚动条Y值
     this.saveY = this.$refs.scroll.scroll.y
   },
   created() {
@@ -121,14 +124,10 @@ export default {
       this.$refs.tabControl1.currentIndex = index
       this.$refs.tabControl2.currentIndex = index
     },
-    // 回到顶部
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0)
-    },
     // 回到顶部按钮的相关函数
     contentScroll(position) {
       // 判断BackTop是否显示
-      this.isShowBackTop = -position.y > 1000
+      this.isShowBackTop = -position.y > BACK_TOP
       // 决定tabControl是否吸顶
       this.isTabFixed = -position.y > this.tabOffsetTop
     },

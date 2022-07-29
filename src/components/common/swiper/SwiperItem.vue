@@ -1,3 +1,4 @@
+<!-- 轮播图例 -->
 <template>
   <div class="slide">
     <slot></slot>

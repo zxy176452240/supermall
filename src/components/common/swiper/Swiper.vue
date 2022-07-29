@@ -1,3 +1,4 @@
+<!-- 轮播图组件 -->
 <template>
   <div id="hy-swiper">
     <div class="swiper" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
